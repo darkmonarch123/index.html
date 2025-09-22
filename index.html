@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ERA Home Decor | Nigeria Curtains & Rugs</title>
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-bxM4c5lQO2p6q2pH8X2LJ4sJ3w9S3vV6Mn1oA9jB6ZKf7sZcMZ5v3Q9cPRK6Dn4+0djVQg5XK1w76pVtYkMnkg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --brand: #f9f9f9; /* Fixed from #ffff to #ffffff */
+      --ink: #546181;
+      --muted: #173164;
+      --paper: #ffffff;
+      --bg: #f3f4f6;
+      --danger: #bd2121;
+      --ok: #11c954;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; font-family: Inter, system-ui, Arial, sans-serif; color: var(--ink); background: var(--bg); }
+    a { color: inherit; }
+
+    /* Header */
+    header { position: sticky; top: 0; z-index: 20; background: var(--brand); box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+    .nav { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-weight: 800; letter-spacing: .5px; }
+    .nav-links { display: flex; gap: 18px; align-items: center; }
+    .nav-links a { text-decoration: none; font-weight: 600; padding: 8px 10px; border-radius: 10px; transition: .2s; }
+    .nav-links a:hover { background: rgba(0,0,0,.06); }
+    .badge { background: var(--ink); color: #fff; padding: 2px 8px; border-radius: 999px; font-size: .75rem; }
+
+    /* Mobile hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 3px; background: #111; border-radius: 2px; }
+    @media (max-width: 820px) {
+      .nav-links { display: none; position: absolute; right: 16px; top: 70px; background: var(--brand); padding: 12px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.12); width: min(270px, 90vw); flex-direction: column; align-items: stretch; }
+      .nav-links.show { display: flex; }
+      .hamburger { display: flex; }
+    }
+
+    /* Sections */
+    main { min-height: calc(100dvh - 64px); }
+    .hero { text-align: center; padding: 64px 16px; background: linear-gradient(180deg, #978d4d, #fffef2); color: #121211; } /* Improved text contrast */
+    .hero h1 { font-size: clamp(28px, 5vw, 48px); margin: 0 0 8px; }
+    .hero p { color: #374151; margin: 6px 0 20px; }
+    .cta { display: inline-block; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 700; }
+
+    .grid { display: grid; gap: 18px; }
+    .products { padding: 28px 16px; }
+    .products h2 { margin: 0 0 12px; }
+    .product-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+    .card { background: var(--paper); border-radius: var(--radius); overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.06); display: flex; flex-direction: column; }
+    .card img { width: 100%; height: 200px; object-fit: cover; }
+    .card-body { padding: 12px 14px; }
+    .price { color: #121211; font-weight: 800; }
+    .muted { color: var(--muted); }
+    .actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn { appearance: none; border: 0; border-radius: 10px; padding: 10px 12px; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: var(--brand); }
+    .btn-dark { background: var(--ink); color: #fff; }
+    .btn-ghost { background: #eef2ff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+
+    /* Forms */
+    form { display: grid; gap: 10px; }
+    input, select, textarea { width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
+    label { font-size: .9rem; font-weight: 600; }
+    .panel { background: var(--paper); border-radius: var(--radius); padding: 16px; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+    .qty { display: flex; align-items: center; gap: 8px; }
+    .qty button { width: 28px; height: 28px; border-radius: 8px; }
+
+    /* Footer */
+    footer { background: var(--brand); padding: 18px 0; margin-top: 28px; }
+    .social a { font-size: 22px; margin-right: 12px; }
+
+    /* Badges */
+    .soldout { background: #fee2e2; color: #991b1b; font-size: .75rem; padding: 2px 8px; border-radius: 1000px; }
+    .low { background: #fef3c7; color: #92400e; font-size: .75rem; padding: 2px 8px; border-radius: 1000px; }
+
+    /* Loading state */
+    .loading { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); place-items: center; z-index: 100; }
+    .loading::after { content: ''; width: 40px; height: 40px; border: 4px solid #fff; border-top-color: var(--ink); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading"></div>
+  <header>
+    <div class="wrap nav">
+      <div class="logo">ERA <span class="muted">| Home Decor</span></div>
+      <div class="hamburger" id="hamburger" aria-label="Toggle Menu" tabindex="0" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </div>
+      <nav class="nav-links" id="navLinks">
+        <a href="#/">Home</a>
+        <a href="#/about">About</a>
+        <a href="#/catalog">Shop</a>
+        <a href="#/cart"><i class="fa-solid fa-cart-shopping"></i> Cart <span class="badge" id="cartCount">0</span></a>
+        <span id="authLinks">
+          <a href="#/login">Login</a>
+          <a href="#/signup">Create Account</a>
+        </span>
+        <span id="accountLinks" style="display:none">
+          <a href="#/account"><i class="fa-regular fa-user"></i> Account</a>
+          <a href="#/admin" id="adminLink" style="display:none"><i class="fa-solid fa-gauge"></i> Admin</a>
+          <a href="#/logout" id="logoutBtn">Logout</a>
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <footer>
+    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap">
+      <small>&copy; 2025 ERA Decor NG. All rights reserved.</small>
+      <div class="social">
+        <a href="https://twitter.com/ERADecorNG" target="_blank" title="Twitter"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://instagram.com/ERADecorNG" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://facebook.com/ERADecorNG" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ------------------ Data ------------------
+    const CATEGORIES = ['Curtains', 'Curtain Accessories', 'Center Rugs', 'Foot Mats', 'Dining Beads', 'Others'];
+    const seedProducts = [
+      { id: 'c001', name: 'Royal Velvet Curtains (Pair)', cat: 'Curtains', price: 85000, stock: 8, img: 'https://images.unsplash.com/photo-1616046229478-9901c5536a45?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'c002', name: 'Sheer Daylight Curtains', cat: 'Curtains', price: 45000, stock: 15, img: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'a101', name: 'Premium Curtain Rod (2m)', cat: 'Curtain Accessories', price: 18000, stock: 30, img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'a102', name: 'Gold Tieback (Pair)', cat: 'Curtain Accessories', price: 12000, stock: 22, img: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'r201', name: 'Center Rug – Ankara Pattern (Large)', cat: 'Center Rugs', price: 125000, stock: 5, img: 'https://images.unsplash.com/photo-1616594039964-ae9021df3e66?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'r202', name: 'Center Rug – Classic Beige (Medium)', cat: 'Center Rugs', price: 98000, stock: 7, img: 'https://images.unsplash.com/photo-1602511201067-d5d0b18d0a4a?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'm301', name: 'Foot Mat – Welcome Coir', cat: 'Foot Mats', price: 15000, stock: 18, img: 'https://images.unsplash.com/photo-1611915387288-1e676961c0b6?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'm302', name: 'Foot Mat – Rubber Anti-slip', cat: 'Foot Mats', price: 11000, stock: 25, img: 'https://images.unsplash.com/photo-1545023128-4a58ab3a2111?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'd401', name: 'Dining Beads Set – 6 pcs', cat: 'Dining Beads', price: 22000, stock: 12, img: 'https://images.unsplash.com/photo-1505577058444-a3dab90d4253?q=80&w=1200&auto=format&fit=crop' },
+      { id: 'd402', name: 'Table Runner – Woven', cat: 'Dining Beads', price: 26000, stock: 9, img: 'https://images.unsplash.com/photo-1533550907043-0f0b9e9a6b5d?q=80&w=1200&auto=format&fit=crop' }
+    ];
+
+    // ------------------ LocalStorage helpers ------------------
+    const store = {
+      get users() { return JSON.parse(localStorage.getItem('users') || '[]'); },
+      set users(v) { localStorage.setItem('users', JSON.stringify(v)); },
+      get currentUser() { return JSON.parse(localStorage.getItem('currentUser') || 'null'); },
+      set currentUser(v) { localStorage.setItem('currentUser', JSON.stringify(v)); updateAuthUI(); },
+      get products() { return JSON.parse(localStorage.getItem('products') || '[]'); },
+      set products(v) { localStorage.setItem('products', JSON.stringify(v)); },
+      get cart() { return JSON.parse(localStorage.getItem('cart') || '[]'); },
+      set cart(v) { localStorage.setItem('cart', JSON.stringify(v)); updateCartBadge(); },
+      get orders() { return JSON.parse(localStorage.getItem('orders') || '[]'); },
+      set orders(v) { localStorage.setItem('orders', JSON.stringify(v)); },
+      clear() { localStorage.clear(); }
+    };
+
+    // Seed initial data and admin account
+    (function seed() {
+      if (store.products.length === 0) store.products = seedProducts;
+      const users = store.users;
+      if (!users.find(u => u.email === 'admin@eradecor.ng')) {
+        users.push({ name: 'Admin', email: 'admin@eradecor.ng', password: hash('admin123'), role: 'admin' });
+        store.users = users;
+      }
+    })();
+
+    function formatNaira(n) { return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(n); }
+
+    function toast(msg, type = 'ok') {
+      const el = document.createElement('div');
+      el.textContent = msg;
+      el.style.position = 'fixed';
+      el.style.right = '16px';
+      el.style.bottom = '16px';
+      el.style.padding = '10px 14px';
+      el.style.borderRadius = '10px';
+      el.style.background = type === 'ok' ? '#16a34a' : (type === 'warn' ? '#f59e0b' : '#ef4444');
+      el.style.color = '#fff';
+      el.style.zIndex = 50;
+      el.style.boxShadow = '0 8px 24px rgba(0,0,0,.2)';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 2200);
+    }
+
+    // ------------------ Router ------------------
+    const routes = {
+      '/': renderHome,
+      '/about': renderAbout,
+      '/catalog': renderCatalog,
+      '/login': renderLogin,
+      '/signup': renderSignup,
+      '/account': renderAccount,
+      '/cart': renderCart,
+      '/checkout': renderCheckout,
+      '/admin': renderAdmin,
+      '/logout': handleLogout,
+    };
+
+    function navigate() {
+      document.getElementById('loading').style.display = 'grid';
+      const hash = location.hash.replace('#', '');
+      const path = hash.split('?')[0] || '/';
+      const fn = routes[path] || renderNotFound;
+      setTimeout(() => {
+        fn();
+        closeMobileNav();
+        document.getElementById('loading').style.display = 'none';
+      }, 100); // Simulate async loading
+    }
+    window.addEventListener('hashchange', navigate);
+    window.addEventListener('load', () => {
+      updateAuthUI();
+      updateCartBadge();
+      navigate();
+    });
+
+    // ------------------ UI Helpers ------------------
+    const app = document.getElementById('app');
+    const navLinks = document.getElementById('navLinks');
+    const hamburger = document.getElementById('hamburger');
+
+    function toggleMobileNav() {
+      const isOpen = navLinks.classList.toggle('show');
+      hamburger.setAttribute('aria-expanded', isOpen);
+      if (isOpen) {
+        navLinks.querySelector('a').focus(); // Focus first link for accessibility
+      }
+    }
+
+    hamburger.addEventListener('click', toggleMobileNav);
+    hamburger.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') toggleMobileNav();
+    });
+
+    function closeMobileNav() {
+      navLinks.classList.remove('show');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+
+    function updateCartBadge() {
+      const count = store.cart.reduce((sum, i) => sum + i.qty, 0);
+      const el = document.getElementById('cartCount');
+      if (el) el.textContent = count;
+    }
+
+    function updateAuthUI() {
+      const auth = document.getElementById('authLinks');
+      const acc = document.getElementById('accountLinks');
+      const adminLink = document.getElementById('adminLink');
+      if (store.currentUser) {
+        auth.style.display = 'none';
+        acc.style.display = 'inline-flex';
+        adminLink.style.display = store.currentUser.role === 'admin' ? 'inline-flex' : 'none';
+      } else {
+        auth.style.display = 'inline-flex';
+        acc.style.display = 'none';
+        if (adminLink) adminLink.style.display = 'none';
+      }
+    }
+
+    // ------------------ Renderers ------------------
+    function renderHome() {
+      app.innerHTML = `
+        <section class="hero">
+          <div class="wrap">
+            <h1>ERA Home Decor</h1>
+            <p>Curtains, accessories, center rugs, foot mats, dining beads—delivered across Nigeria.</p>
+            <a class="cta" href="#/catalog">Shop Now</a>
+          </div>
+        </section>
+        <section class="products wrap">
+          <h2>Popular Items</h2>
+          <div class="grid product-grid" id="prodGrid"></div>
+        </section>
+      `;
+      mountProducts('prodGrid', store.products.slice(0, 6));
+    }
+
+    function renderCatalog() {
+      const cats = CATEGORIES.map(c => `<option value="${c}">${c}</option>`).join('');
+      app.innerHTML = `
+        <section class="products wrap">
+          <div style="display:flex; align-items:end; justify-content:space-between; gap:12px; flex-wrap:wrap">
+            <div>
+              <h2>Shop</h2>
+              <p class="muted">Browse by category or search</p>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap">
+              <select id="catFilter"><option value="all">All categories</option>${cats}</select>
+              <input id="searchBox" placeholder="Search products..." />
+            </div>
+          </div>
+          <div class="grid product-grid" id="prodGrid"></div>
+        </section>
+      `;
+      const gridId = 'prodGrid';
+      let view = store.products;
+      const render = () => mountProducts(gridId, view);
+
+      const catFilter = document.getElementById('catFilter');
+      const searchBox = document.getElementById('searchBox');
+
+      // Remove previous listeners to prevent duplicates
+      const newCatFilter = catFilter.cloneNode(true);
+      const newSearchBox = searchBox.cloneNode(true);
+      catFilter.replaceWith(newCatFilter);
+      searchBox.replaceWith(newSearchBox);
+
+      newCatFilter.addEventListener('change', (e) => {
+        const v = e.target.value;
+        const q = newSearchBox.value.toLowerCase();
+        view = store.products.filter(p => (v === 'all' || p.cat === v) && p.name.toLowerCase().includes(q));
+        render();
+      });
+      newSearchBox.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase();
+        const v = newCatFilter.value;
+        view = store.products.filter(p => (v === 'all' || p.cat === v) && p.name.toLowerCase().includes(q));
+        render();
+      });
+
+      render();
+    }
+
+    function renderAbout() {
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px">
+          <div class="grid" style="grid-template-columns:1.2fr 1fr">
+            <div class="panel">
+              <h2>About ERA Decor NG</h2>
+              <p>We specialise in premium curtains, accessories and rugs that elevate your space without stress. Nationwide delivery with Lagos same‑day options.</p>
+              <p>Need measurement or install? Our team can handle on-site measurements and fittings.</p>
+            </div>
+            <div class="panel">
+              <h3>Contact</h3>
+              <p class="muted"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</p>
+              <p class="muted"><i class="fa-solid fa-phone"></i> 0800‑ERA‑DECOR</p>
+              <p class="muted"><i class="fa-solid fa-envelope"></i> support@eradecor.ng</p>
+              <div class="social" style="margin-top:8px">
+                <a href="https://twitter.com/ERADecorNG" target="_blank" title="Twitter"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://instagram.com/ERADecorNG" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/ERADecorNG" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderLogin() {
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px; max-width:520px">
+          <div class="panel">
+            <h2>Login</h2>
+            <-form id="loginForm">
+              <div><label>Email</label><input type="email" name="email" required /></div>
+              <div><label>Password</label><input type="password" name="password" minGHt="6" required /></div>
+              <button class="btn btn-dark" type="submit">Login</button>
+              <p class="muted">No account? <a href="#/signup">Create one</a></p>
+              <p class="muted">Admin demo: admin@eradecor.ng / admin123</p>
+            </form>
+          </div>
+        </section>`;
+      const loginForm = document.getElementById('loginForm');
+      const newForm = loginForm.cloneNode(true);
+      loginForm.replaceWith(newForm);
+      newForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'grid';
+        const fd = new FormData(e.target);
+        const email = sanitize(fd.get('email').trim().toLowerCase());
+        const pw = fd.get('password');
+        const user = store.users.find(u => u.email === email);
+        if (!user) {
+          toast('No account found', 'error');
+          document.getElementById('loading').style.display = 'none';
+          return;
+        }
+        if (user.password !== hash(pw)) {
+          toast('Invalid credentials', 'error');
+          document.getElementById('loading').style.display = 'none';
+          return;
+        }
+        store.currentUser = { email: user.email, name: user.name, role: user.role || 'user' };
+        toast('Welcome back!');
+        e.target.reset();
+        document.getElementById('loading').style.display = 'none';
+        location.hash = '#/account';
+      });
+    }
+
+    function renderSignup() {
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px; max-width:520px">
+          <div class="panel">
+            <h2>Create Account</h2>
+            <form id="signupForm">
+              <div><label>Full name</label><input name="name" required /></div>
+              <div><label>Email</label><input type="email" name="email" required /></div>
+              <div><label>Password</label><input type="password" name="password" minlength="6" required /></div>
+              <button class="btn btn-dark" type="submit">Create account</button>
+              <p class="muted">Already have an account? <a href="#/login">Login</a></p>
+            </form>
+          </div>
+        </section>`;
+      const signupForm = document.getElementById('signupForm');
+      const newForm = signupForm.cloneNode(true);
+      signupForm.replaceWith(newForm);
+      newForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'grid';
+        const fd = new FormData(e.target);
+        const name = sanitize(fd.get('name').trim());
+        const email = sanitize(fd.get('email').trim().toLowerCase());
+        const password = fd.get('password');
+        if (store.users.some(u => u.email === email)) {
+          toast('Email already registered', 'warn');
+          document.getElementById('loading').style.display = 'none';
+          return;
+        }
+        const users = store.users;
+        users.push({ name, email, password: hash(password), role: 'user' });
+        store.users = users;
+        store.currentUser = { name, email, role: 'user' };
+        toast('Account created');
+        e.target.reset();
+        document.getElementById('loading').style.display = 'none';
+        location.hash = '#/account';
+      });
+    }
+
+    function renderAccount() {
+      if (!requireAuth()) return;
+      const u = store.currentUser;
+      const userOrders = store.orders.filter(o => o.user === u.email);
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px">
+          <div class="grid" style="grid-template-columns:1fr 1fr">
+            <div class="panel">
+              <h2>Welcome, ${sanitize(u.name || u.email)}</h2>
+              <p class="muted">Manage your account and orders.</p>
+              <div class="actions" style="margin-top:8px">
+                <a class="btn btn-primary" href="#/catalog">Continue shopping</a>
+                <a class="btn btn-dark" href="#/cart">View cart</a>
+                ${u.role === 'admin' ? '<a class="btn btn-ghost" href="#/admin">Open Admin</a>' : ''}
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Profile</h3>
+              <p><strong>Email:</strong> ${sanitize(u.email)}</p>
+              <button class="btn btn-ghost" id="logoutNow">Logout</button>
+            </div>
+          </div>
+          <div class="panel" style="margin-top:18px">
+            <h3>Order History</h3>
+            ${userOrders.length ? `
+              <div style="overflow:auto">
+                <table>
+                  <thead><tr><th>Order ID</th><th>Date</th><th>Total</th><th>Items</th></tr></thead>
+                  <tbody>
+                    ${userOrders.map(o => `
+                      <tr>
+                        <td>${o.id}</td>
+                        <td>${new Date(o.date).toLocaleString()}</td>
+                        <td>${formatNaira(o.total)}</td>
+                        <td>${o.items.map(i => `${i.name} × ${i.qty}`).join(', ')}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            ` : '<p class="muted">No orders yet.</p>'}
+          </div>
+        </section>`;
+      document.getElementById('logoutNow').addEventListener('click', () => handleLogout());
+    }
+
+    function renderCart() {
+      const items = store.cart;
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px">
+          <h2>Your Cart</h2>
+          ${items.length ? `
+            <div class="panel">
+              <div style="overflow:auto">
+                <table>
+                  <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Subtotal</th><th></th></tr></thead>
+                  <tbody id="cartBody"></tbody>
+                </table>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; flex-wrap:wrap">
+                <strong id="cartTotal"></strong>
+                <div class="actions">
+                  <a href="#/catalog" class="btn btn-ghost">Continue shopping</a>
+                  <a href="#/checkout" class="btn btn-dark">Checkout</a>
+                </div>
+              </div>
+            </div>
+          ` : `<p class="muted">Your cart is empty. <a href="#/catalog">Browse products</a></p>`}
+        </section>`;
+      if (items.length) {
+        const tbody = document.getElementById('cartBody');
+        tbody.innerHTML = '';
+        items.forEach((it, idx) => {
+          const p = store.products.find(p => p.id === it.id);
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${sanitize(p?.name || it.id)}</td>
+            <td>${formatNaira(p?.price || 0)}</td>
+            <td class="qty">
+              <button class="btn" data-act="dec" data-i="${idx}">-</button>
+              <span>${it.qty}</span>
+              <button class="btn" data-act="inc" data-i="${idx}" ${!p || p.stock <= it.qty ? 'disabled' : ''}>+</බ</button>
+            </td>
+            <td>${formatNaira((p?.price || 0) * it.qty)}</td>
+            <td><button class="btn" data-act="rm" data-i="${idx}"><i class="fa-regular fa-trash-can"></i></button></td>`;
+          tbody.appendChild(tr);
+        });
+        const cartBody = document.getElementById('cartBody');
+        const newCartBody = cartBody.cloneNode(true);
+        cartBody.replaceWith(newCartBody);
+        newCartBody.addEventListener('click', (e) => {
+          const btn = e.target.closest('button');
+          if (!btn) return;
+          const i = +btn.dataset.i;
+          const act = btn.dataset.act;
+          const cart = store.cart;
+          const product = store.products.find(p => p.id === cart[i].id);
+          if (act === 'inc') {
+            if (product && cart[i].qty < product.stock) cart[i].qty++;
+            else toast('Not enough stock', 'warn');
+          }
+          if (act === 'dec') cart[i].qty = Math.max(1, cart[i].qty - 1);
+          if (act === 'rm') cart.splice(i, 1);
+          store.cart = cart;
+          renderCart();
+        });
+        const total = items.reduce((sum, it) => {
+          const p = store.products.find(p => p.id === it.id);
+          return sum + (p?.price || 0) * it.qty;
+        }, 0);
+        document.getElementById('cartTotal').textContent = `Total: ${formatNaira(total)}`;
+      }
+    }
+
+    function renderCheckout() {
+      if (!requireAuth()) return;
+      const items = store.cart;
+      if (!items.length) {
+        toast('Your cart is empty', 'warn');
+        location.hash = '#/catalog';
+        return;
+      }
+      for (const it of items) {
+        const p = store.products.find(p => p.id === it.id);
+        if (!p || it.qty > p.stock) {
+          toast(`Stock not available for ${sanitize(p?.name || it.id)}`, 'warn');
+          return;
+        }
+      }
+      const total = items.reduce((sum, it) => {
+        const p = store.products.find(p => p.id === it.id);
+        return sum + (p?.price || 0) * it.qty;
+      }, 0);
+      const u = store.currentUser || {};
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px">
+          <h2>Checkout</h2>
+          <div class="grid" style="grid-template-columns:1.2fr 1fr">
+            <div class="panel">
+              <form id="checkoutForm">
+                <div><label>Full name</label><input name="name" required value="${sanitize(u.name || '')}" /></div>
+                <div><label>Email</label><input type="email" name="email" required value="${sanitize(u.email || '')}" /></div>
+                <div><label>Phone</label><input name="phone" required placeholder="080..." pattern="^0(70|80|81|90|91)\d{8}$" title="Enter a valid Nigerian phone number (e.g., 08012345678)" /></div>
+                <div><label>Address</label><textarea name="address" required placeholder="Street, City, State"></textarea></div>
+                <div><label>Payment method</label><select name="payment" required><option value="transfer">Bank Transfer</option><option value="cod">Cash on Delivery</option><option value="card">Debit Card</option></select></div>
+                <button class="btn btn-dark" type="submit">Place order</button>
+              </form>
+            </div>
+            <div class="panel">
+              <h3>Order Summary</h3>
+              <div id="summary"></div>
+              <hr style="margin:12px 0" />
+              <strong>Total: ${formatNaira(total)}</strong>
+            </div>
+          </div>
+        </section>`;
+      const sum = document.getElementById('summary');
+      sum.innerHTML = items.map(it => {
+        const p = store.products.find(p => p.id === it.id);
+        return `<div style="display:flex; align-items:center; justify-content:space-between; gap:10px"><span>${sanitize(p?.name)} × ${it.qty}</span><span>${formatNaira((p?.price || 0) * it.qty)}</span></div>`;
+      }).join('');
+      const checkoutForm = document.getElementById('checkoutForm');
+      const newForm = checkoutForm.cloneNode(true);
+      checkoutForm.replaceWith(newForm);
+      newForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'grid';
+        const now = new Date();
+        const orderId = 'ORD-' + now.getTime();
+        const itemsCopy = store.cart.map(it => {
+          const p = store.products.find(pp => pp.id === it.id);
+          return { id: it.id, name: sanitize(p?.name || it.id), price: p?.price || 0, qty: it.qty };
+        });
+        const totalAmt = itemsCopy.reduce((s, i) => s + i.price * i.qty, 0);
+        const fd = new FormData(e.target);
+        const order = {
+          id: orderId,
+          user: store.currentUser?.email || 'guest',
+          payment: fd.get('payment'),
+          date: now.toISOString(),
+          items: itemsCopy,
+          total: totalAmt
+        };
+        const orders = store.orders;
+        orders.push(order);
+        store.orders = orders;
+        const products = store.products.map(p => {
+          const it = store.cart.find(c => c.id === p.id);
+          return it ? { ...p, stock: p.stock - it.qty } : p;
+        });
+        store.products = products;
+        store.cart = [];
+        toast('Order placed successfully!');
+        e.target.reset();
+        document.getElementById('loading').style.display = 'none';
+        location.hash = '#/';
+      });
+    }
+
+    function renderAdmin() {
+      if (!requireAdmin()) return;
+      const prods = store.products;
+      const orders = store.orders;
+      const revenue = orders.reduce((s, o) => s + o.total, 0);
+      const today = new Date().toISOString().slice(0, 10);
+      const todayRev = orders.filter(o => o.date.slice(0, 10) === today).reduce((s, o) => s + o.total, 0);
+      const inventoryValue = prods.reduce((s, p) => s + (p.price * p.stock), 0);
+      app.innerHTML = `
+        <section class="wrap" style="padding:28px 16px">
+          <h2>Admin Dashboard</h2>
+          <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin:12px 0">
+            <div class="panel"><strong>Total Revenue</strong><div style="font-size:1.3rem">${formatNaira(revenue)}</div></div>
+            <div class="panel"><strong>Today Revenue</strong><div style="font-size:1.3rem">${formatNaira(todayRev)}</div></div>
+            <div class="panel"><strong>Orders</strong><div style="font-size:1.3rem">${orders.length}</div></div>
+            <div class="panel"><strong>Inventory Value</strong><div style="font-size:1.3rem">${formatNaira(inventoryValue)}</div></div>
+          </div>
+          <div class="grid" style="grid-template-columns:1.2fr 1fr">
+            <div class="panel">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                <h3>Inventory</h3>
+                <button class="btn btn-dark" id="addProdBtn"><i class="fa-solid fa-plus"></i> Add Product</button>
+              </div>
+              <div style="overflow:auto">
+                <table>
+                  <thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+                  <tbody id="invBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="panel">
+              <h3>Recent Orders</h3>
+              <div style="max-height:360px; overflow:auto">
+                ${orders.slice().reverse().map(o => `
+                  <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee">
+                    <div><strong>${sanitize(o.id)}</strong><div class="muted" style="font-size:.85rem">${new Date(o.date).toLocaleString()}</div></div>
+                    <div><strong>${formatNaira(o.total)}</strong><div class="muted" style="font-size:.85rem">${o.items.length} items</div></div>
+                  </div>
+                `).join('') || '<p class="muted">No orders yet.</p>'}
+              </div>
+            </div>
+          </div>
+        </section>`;
+      const tbody = document.getElementById('invBody');
+      const renderRows = () => {
+        const rows = store.products.map(p => `
+          <tr>
+            <td>${sanitize(p.id)}</td>
+            <td>${sanitize(p.name)}</td>
+            <td>${sanitize(p.cat)}</td>
+            <td>${formatNaira(p.price)}</td>
+            <td>${p.stock}</td>
+            <td>${p.stock === 0 ? '<span class="soldout">Sold out</span>' : (p.stock < 5 ? '<span class="low">Low</span>' : '')}</td>
+            <td>
+              <button class="btn" data-act="edit" data-id="${p.id}"><i class="fa-regular fa-pen-to-square"></i></button>
+              <button class="btn btn-danger" data-act="del" data-id="${p.id}"><i class="fa-regular fa-trash-can"></i></button>
+            </td>
+          </tr>`).join('');
+        tbody.innerHTML = rows || '<tr><td colspan="7" class="muted">No products</td></tr>';
+      };
+      renderRows();
+      document.getElementById('addProdBtn').addEventListener('click', () => openProductForm());
+      const newTbody = tbody.cloneNode(true);
+      tbody.replaceWith(newTbody);
+      newTbody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const act = btn.dataset.act;
+        if (act === 'edit') openProductForm(store.products.find(p => p.id === id));
+        if (act === 'del') {
+          if (confirm('Delete this product?')) {
+            store.products = store.products.filter(p => p.id !== id);
+            renderRows();
+            toast('Product deleted', 'warn');
+          }
+        }
+      });
+    }
+
+    function openProductForm(prod) {
+      const isEdit = !!prod;
+      const overlay = document.createElement('div');
+      overlay.style.position = 'fixed';
+      overlay.style.inset = '0';
+      overlay.style.background = 'rgba(0,0,0,.35)';
+      overlay.style.display = 'grid';
+      overlay.style.placeItems = 'center';
+      overlay.style.zIndex = 60;
+      overlay.innerHTML = `
+        <div class="panel" style="width:min(520px,90vw);">
+          <h3>${isEdit ? 'Edit' : 'Add'} Product</h3>
+          <form id="prodForm">
+            <div><label>ID</label><input name="id" required ${isEdit ? 'readonly' : ''} value="${sanitize(prod?.id || '')}" /></div>
+            <div><label>Name</label><input name="name" required value="${sanitize(prod?.name || '')}" /></div>
+            <div><label>Category</label>
+              <select name="cat" required>${CATEGORIES.map(c => `<option ${prod?.cat === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+            </div>
+            <div><label>Price (NGN)</label><input type="number" min="0" name="price" required value="${prod?.price || 0}" /></div>
+            <div><label>Stock</label><input type="number" min="0" name="stock" required value="${prod?.stock || 0}" /></div>
+            <div><label>Image URL</label><input name="img" placeholder="https://..." value="${sanitize(prod?.img || '')}" /></div>
+            <div class="actions" style="justify-content:flex-end">
+              <button type="button" class="btn" id="cancelPF">Cancel</button>
+              <button class="btn btn-dark" type="submit">${isEdit ? 'Save' : 'Add'}</button>
+            </div>
+          </form>
+        </div>`;
+      document.body.appendChild(overlay);
+      document.getElementById('cancelPF').onclick = () => overlay.remove();
+      const prodForm = document.getElementById('prodForm');
+      const newForm = prodForm.cloneNode(true);
+      prodForm.replaceWith(newForm);
+      newForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        document.getElementById('loading').style.display = 'grid';
+        const fd = new FormData(e.target);
+        const data = Object.fromEntries(fd.entries());
+        data.price = +data.price;
+        data.stock = +data.stock;
+        data.id = sanitize(data.id);
+        data.name = sanitize(data.name);
+        data.cat = sanitize(data.cat);
+        data.img = sanitize(data.img);
+        let prods = store.products;
+        if (isEdit) {
+          prods = prods.map(p => p.id === prod.id ? { ...p, ...data } : p);
+        } else {
+          if (prods.some(p => p.id === data.id)) {
+            toast('ID already exists', 'warn');
+            document.getElementById('loading').style.display = 'none';
+            return;
+          }
+          prods.push(data);
+        }
+        store.products = prods;
+        overlay.remove();
+        toast(isEdit ? 'Saved' : 'Product added');
+        document.getElementById('loading').style.display = 'none';
+        renderAdmin();
+      });
+    }
+
+    function renderNotFound() {
+      app.innerHTML = `<section class="wrap" style="padding:28px 16px"><h2>Page not found</h2><a class="btn btn-ghost" href="#/">Go Home</a></section>`;
+    }
+
+    // ------------------ Actions ------------------
+    function addToCart(id) {
+      const prod = store.products.find(p => p.id === id);
+      if (!prod) {
+        toast('Product not found', 'error');
+        return;
+      }
+      if (prod.stock <= 0) {
+        toast('Out of stock', 'warn');
+        return;
+      }
+      const cart = store.cart;
+      const idx = cart.findIndex(i => i.id === id);
+      if (idx > -1) {
+        if (cart[idx].qty < prod.stock) cart[idx].qty++;
+        else {
+          toast('Not enough stock', 'warn');
+          return;
+        }
+      } else {
+        cart.push({ id, qty: 1 });
+      }
+      store.cart = cart;
+      toast('Added to cart');
+    }
+
+    function handleLogout() {
+      store.currentUser = null;
+      toast('Logged out');
+      location.hash = '#/';
+    }
+
+    function requireAuth() {
+      if (!store.currentUser) {
+        toast('Please login to continue', 'warn');
+        location.hash = '#/login';
+        return false;
+      }
+      return true;
+    }
+
+    function requireAdmin() {
+      if (!requireAuth()) return false;
+      if (store.currentUser.role !== 'admin') {
+        toast('Admins only', 'error');
+        location.hash = '#/';
+        return false;
+      }
+      return true;
+    }
+
+    // ------------------ Misc Helpers ------------------
+    function mountProducts(gridId, list) {
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = '';
+      list.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const badge = p.stock === 0 ? '<span class="soldout">Sold out</span>' : (p.stock < 5 ? '<span class="low">Low stock</span>' : '');
+        card.innerHTML = `
+          <img src="${sanitize(p.img)}" alt="${sanitize(p.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/200?text=Image+Not+Found'" />
+          <div class="card-body">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px">
+              <strong>${sanitize(p.name)}</strong>
+              <span class="price">${formatNaira(p.price)}</span>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:6px">
+              <span class="muted" style="font-size:.9rem">${sanitize(p.cat)}</span>
+              ${badge}
+            </div>
+            <div class="actions">
+              <button class="btn btn-primary" data-id="${p.id}" ${p.stock === 0 ? 'disabled' : ''}><i class="fa-solid fa-cart-plus"></i> Add to cart</button>
+            </div>
+          </div>`;
+        grid.appendChild(card);
+      });
+      const newGrid = grid.cloneNode(true);
+      grid.replaceWith(newGrid);
+      newGrid.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-id]');
+        if (!btn) return;
+        addToCart(btn.dataset.id);
+      });
+    }
+
+    // Basic input sanitization
+    function sanitize(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Improved hash function using SubtleCrypto (client-side, for demo purposes)
+    async function hash(s) {
+      if (window.crypto && window.crypto.subtle) {
+        const msgBuffer = new TextEncoder().encode(s);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      // Fallback to original hash function
+      let h = 0;
+      for (let i = 0; i < s.length; i++) {
+        h = ((h << 5) - h) + s.charCodeAt(i);
+        h |= 0;
+      }
+      return String(h);
+    }
+
+    function toggleTheme() {
+  const root = document.documentElement;
+  const isDark = root.style.getPropertyValue('--brand') === '#ffffff';
+  root.style.setProperty('--brand', isDark ? '#0e0e0d' : '#ffffff');
+  root.style.setProperty('--muted', isDark ? '#6b7280' : '#c6cede');
+  root.style.setProperty('--danger', isDark ? '#ef4444' : '#bd2121');
+  root.style.setProperty('--ok', isDark ? '#16a34a' : '#11c954');
+  // Update other variables as needed
+}
+
+function navigate() {
+  try {
+    document.getElementById('loading').style.display = 'grid';
+    const hash = location.hash.replace('#', '');
+    const path = hash.split('?')[0] || '/';
+    const fn = routes[path] || renderNotFound;
+    setTimeout(() => {
+      fn();
+      closeMobileNav();
+      document.getElementById('loading').style.display = 'none';
+    }, 100);
+  } catch (e) {
+    console.error('Navigation error:', e);
+    toast('An error occurred', 'error');
+    document.getElementById('loading').style.display = 'none';
+  }
+}
+
+
+let debounceTimer;
+newSearchBox.addEventListener('input', (e) => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const q = e.target.value.toLowerCase();
+    const v = newCatFilter.value;
+    view = store.products.filter(p => (v === 'all' || p.cat === v) && p.name.toLowerCase().includes(q));
+    render();
+  }, 300);
+});
+  </script>
+</body>
+</html>
